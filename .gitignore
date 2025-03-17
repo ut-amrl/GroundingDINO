@@ -1,3 +1,8 @@
+*.png
+debug
+weights
+
+
 # IDE
 .idea/
 .vscode/

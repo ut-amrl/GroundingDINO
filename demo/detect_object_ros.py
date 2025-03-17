@@ -183,11 +183,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--checkpoint_path", "-p", type=str, required=True, help="path to checkpoint file"
     )
-    parser.add_argument("--image_path", "-i", type=str, required=True, help="path to image file")
-    parser.add_argument("--text_prompt", "-t", type=str, required=True, help="text prompt")
-    parser.add_argument(
-        "--output_dir", "-o", type=str, default="outputs", required=True, help="output directory"
-    )
 
     parser.add_argument("--box_threshold", type=float, default=0.3, help="box threshold")
     parser.add_argument("--text_threshold", type=float, default=0.25, help="text threshold")
@@ -199,7 +194,7 @@ if __name__ == "__main__":
                         ")
 
     parser.add_argument("--cpu-only", action="store_true", help="running on cpu only!, default=False")
-    parser.add_argument("--verbose", action="store_true", help="debug mode, default=False")
+    parser.add_argument("--verbose", "-v", action="store_true", help="debug mode, default=False")
     args = parser.parse_args()
 
     # cfg
@@ -207,6 +202,7 @@ if __name__ == "__main__":
     TEXT_THRESHOLD = args.text_threshold
     TOKEN_SPANS = args.token_spans
     CPU_ONLY = args.cpu_only
+    VERBOSE = args.verbose
     
     MODEL = load_model(args.config_file, args.checkpoint_path, cpu_only=CPU_ONLY)
     grounding_dino_service()

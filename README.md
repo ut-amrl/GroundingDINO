@@ -1,3 +1,13 @@
+# ROS Support
+## Object Detection
+It depends on ros service `SemanticObjectDetectionSrv` from amrl_msgs. 
+
+To start the service:
+```
+python demo/detect_object_ros.py -c groundingdino/config/GroundingDINO_SwinT_OGC.py -p weights/groundingdino_swint_ogc.pth -v
+```
+
+# Grounding Dino
 <div align="center">
   <img src="./.asset/grounding_dino_logo.png" width="30%">
 </div>

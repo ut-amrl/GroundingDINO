@@ -119,7 +119,7 @@ def ros_image_to_pil(ros_image):
     np_arr = np.frombuffer(ros_image.data, dtype=np.uint8)
 
     # Reshape based on encoding
-    if ros_image.encoding == "rgb8":
+    if ros_image.encoding == "rgb8" or ros_image.encoding == "bgr8":
         image = np_arr.reshape((ros_image.height, ros_image.width, 3))
     elif ros_image.encoding == "mono8":
         image = np_arr.reshape((ros_image.height, ros_image.width))
@@ -153,9 +153,9 @@ def handle_object_detection_request(req):
             "size": [size[1], size[0]],  # H,W
             "labels": pred_phrases,
         }
+        query_pil_img.save(os.path.join("debug", "raw_image.jpg"))
         image_with_box = plot_boxes_to_image(query_pil_img, pred_dict)[0]
         image_with_box.save(os.path.join("debug", "pred.jpg"))
-        query_pil_img.save(os.path.join("debug", "raw_image.jpg"))
     
     H, W = query_pil_img.size
     bbox_arr_msg = BBox2DArrayMsg(header=req.query_image.header)
@@ -206,35 +206,3 @@ if __name__ == "__main__":
     
     MODEL = load_model(args.config_file, args.checkpoint_path, cpu_only=CPU_ONLY)
     grounding_dino_service()
-
-    # # make dir
-    # os.makedirs(output_dir, exist_ok=True)
-    # # load image
-    # image_pil, image = load_image(image_path)
-    # # load model
-    # model = load_model(config_file, checkpoint_path, cpu_only=args.cpu_only)
-
-    # # visualize raw image
-    # image_pil.save(os.path.join(output_dir, "raw_image.jpg"))
-
-    # # set the text_threshold to None if token_spans is set.
-    # if token_spans is not None:
-    #     text_threshold = None
-    #     print("Using token_spans. Set the text_threshold to None.")
-
-
-    # # run model
-    # boxes_filt, pred_phrases = get_grounding_output(
-    #     model, image, text_prompt, box_threshold, text_threshold, cpu_only=args.cpu_only, token_spans=eval(f"{token_spans}")
-    # )
-
-    # # visualize pred
-    # size = image_pil.size
-    # pred_dict = {
-    #     "boxes": boxes_filt,
-    #     "size": [size[1], size[0]],  # H,W
-    #     "labels": pred_phrases,
-    # }
-    # # import ipdb; ipdb.set_trace()
-    # image_with_box = plot_boxes_to_image(image_pil, pred_dict)[0]
-    # image_with_box.save(os.path.join(output_dir, "pred.jpg"))

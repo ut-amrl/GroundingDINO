@@ -157,13 +157,15 @@ def handle_object_detection_request(req):
         image_with_box = plot_boxes_to_image(query_pil_img, pred_dict)[0]
         image_with_box.save(os.path.join("debug", "pred.jpg"))
     
-    H, W = query_pil_img.size
+    W, H = query_pil_img.size
     bbox_arr_msg = BBox2DArrayMsg(header=req.query_image.header)
     for box, label, conf in zip(boxes_filt, labels, confs):
         box = box * torch.Tensor([W, H, W, H])
         box[:2] -= box[2:] / 2
         box[2:] += box[:2]
-        xyxy = box
+        x0, y0, x1, y1 = box
+        x0, y0, x1, y1 = int(x0), int(y0), int(x1), int(y1)
+        xyxy = [x0, y0, x1, y1]
         bbox_arr_msg.bboxes.append(BBox2DMsg(label=label, conf=conf, xyxy=xyxy))
     rospy.loginfo(f"Sending results with query: {req.query_text}")
     return SemanticObjectDetectionSrvResponse(bounding_boxes=bbox_arr_msg)

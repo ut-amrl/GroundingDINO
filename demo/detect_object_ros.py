@@ -117,15 +117,16 @@ def get_grounding_output(model, image, caption, box_threshold, text_threshold=No
 def ros_image_to_pil(ros_image):
     # Convert raw image data to numpy array
     np_arr = np.frombuffer(ros_image.data, dtype=np.uint8)
-
     # Reshape based on encoding
-    if ros_image.encoding == "rgb8" or ros_image.encoding == "bgr8":
+    if ros_image.encoding == "rgb8":
         image = np_arr.reshape((ros_image.height, ros_image.width, 3))
+    elif ros_image.encoding == "bgr8":
+        image = np_arr.reshape((ros_image.height, ros_image.width, 3))
+        image = image[:, :, ::-1]  # BGR -> RGB
     elif ros_image.encoding == "mono8":
         image = np_arr.reshape((ros_image.height, ros_image.width))
     else:
         raise ValueError(f"Unsupported encoding: {ros_image.encoding}")
-
     return PILImage.fromarray(image)
 
 def handle_object_detection_request(req):

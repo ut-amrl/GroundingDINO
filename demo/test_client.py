@@ -51,7 +51,7 @@ def call_grounding_dino_service(image_path, query_text):
 if __name__ == "__main__":
     rospy.init_node("grounding_dino_bbox_detector_client")
     # Example usage
-    image_path = "cup.png"  # Replace with a valid image path
-    query_text = "cup"
+    image_path = "/robodata/taijing/ros_perception/data/cobot/cobot_test_1/004810.png"  # Replace with a valid image path
+    query_text = "person, dog, cat, car, bus, tree, chair, table, lamp, bottle, keyboard, monitor, book, etc.s"
     
     call_grounding_dino_service(image_path, query_text)
